@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -35,10 +36,6 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
 
-
-
-
-
         //Web View
         mWebView = findViewById(R.id.myWebView);
 
@@ -59,29 +56,19 @@ public class Home extends AppCompatActivity {
         webSettings.setSaveFormData(true);
         webSettings.setEnableSmoothTransition(true);
 
-        mWebView.loadUrl("https://www.sinbad.ph/");
-
-
-
-
         //force links open in webview only
         mWebView.setWebViewClient(new MyWebViewClient());
+        mWebView.loadUrl("https://www.sinbad.ph/");
     }
 
-
-
     private class MyWebViewClient extends WebViewClient {
-
-
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-            if (Uri.parse(url).getHost().equals("sinbad.ph"))
-            {
+            if (Uri.parse(url).getHost().contains("sinbad.ph")) {
                 return false;
-            }
-            else {
+            } else {
                 //here open external links in external app or browser
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
@@ -103,31 +90,23 @@ public class Home extends AppCompatActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-
-            progressDialog.dismiss();
             super.onPageFinished(view, url);
+            progressDialog.dismiss();
         }
 
     }
 
     //goto previous page when press back button
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction()== KeyEvent.ACTION_DOWN)
-        {
-            switch (keyCode)
-            {
-                case KeyEvent.KEYCODE_BACK:
-                    if (mWebView.canGoBack())
-                    {
-                        mWebView.goBack();
-                    }
-                    else
-                    {
-                        finish();
-                    }
-                    return true;
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack();
+                } else {
+                    finish();
+                }
+                return true;
             }
         }
         return super.onKeyDown(keyCode, event);
