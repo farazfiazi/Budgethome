@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -43,10 +44,8 @@ public class Home extends AppCompatActivity {
             }
         });
 
-
         //Web View
         mWebView = findViewById(R.id.myWebView);
-
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -58,8 +57,17 @@ public class Home extends AppCompatActivity {
         mWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         mWebView.getSettings().setAppCacheEnabled(true);
-        mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
+        /*if (Build.VERSION.SDK_INT >= 19) {
+            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }*/
+
         webSettings.setDomStorageEnabled(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         webSettings.setUseWideViewPort(true);
@@ -122,10 +130,10 @@ public class Home extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-    public void refreshData(){
+
+    public void refreshData() {
 
         mWebView.loadUrl("http://www.budgethome.co.uk/");
-
 
 
     }
