@@ -1,4 +1,4 @@
-package set.fabsolutions.sinbadshop;
+package set.fabsolutions.budgethome;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package set.fabsolutions.sinbadshop;
+package set.fabsolutions.budgethome;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -6,9 +6,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -16,8 +16,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.onesignal.OneSignal;
-
-import im.delight.android.webview.AdvancedWebView;
 
 
 public class Home extends AppCompatActivity {
@@ -36,12 +34,25 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
 
+        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData(); // your code
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
+
         //Web View
         mWebView = findViewById(R.id.myWebView);
 
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        String dbPath = this.getApplicationContext().getDir("database", getApplicationContext().MODE_PRIVATE).getPath();
+        webSettings.setDatabasePath(dbPath);
 
         //improve WebView performance
         mWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
@@ -58,7 +69,7 @@ public class Home extends AppCompatActivity {
 
         //force links open in webview only
         mWebView.setWebViewClient(new MyWebViewClient());
-        mWebView.loadUrl("https://www.sinbad.ph/");
+        mWebView.loadUrl("http://www.budgethome.co.uk/");
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -66,7 +77,7 @@ public class Home extends AppCompatActivity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-            if (Uri.parse(url).getHost().contains("sinbad.ph")) {
+            if (Uri.parse(url).getHost().contains("budgethome.co.uk")) {
                 return false;
             } else {
                 //here open external links in external app or browser
@@ -110,6 +121,13 @@ public class Home extends AppCompatActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+    public void refreshData(){
+
+        mWebView.loadUrl("http://www.budgethome.co.uk/");
+
+
+
     }
 
 }
